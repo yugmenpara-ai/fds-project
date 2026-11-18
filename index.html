@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Music survey statistical sample tester: compare a new independent student sample with a reference survey using Welch's t-test and chi-square testing." />
+  <meta name="theme-color" content="#0b1220" />
+  <title>FDS · Music Sample Tester</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a href="#top" class="brand" aria-label="FDS Music Lab home"><div class="brand-mark">♫</div><div><b>FDS / MUSIC LAB</b><small>Statistical sample tester</small></div></a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="side-links" aria-label="Sections"><a class="active" href="#top"><span>◫</span> Overview</a><a href="#input"><span>⇧</span> New sample</a><a href="#results"><span>▥</span> Statistical report</a><a href="#methodology"><span>◎</span> Methodology</a></nav>
+      <div class="side-note"><div class="tiny-dot"></div><b>Reference dataset</b><p>211 observations from FDS_Responses_Clean.xlsx → Clean_Data → music_time.</p><span>Educational research prototype</span></div>
+    </aside>
+    <div class="main-area" id="top">
+      <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> Music Survey <span>/</span> Sample Testing</div><div class="top-status"><i></i> Browser-based · No server required</div></header>
+      <main class="page">
+        <div class="page-heading"><div><div class="eyebrow">FOUNDATION OF DATA SCIENCE / STATISTICS</div><h1>Music Listening <em>Sample Tester</em></h1><p>Upload a new sample, test your hypotheses, and explore the evidence against your reference survey—right in your browser.</p></div><div class="heading-note"><span class="tiny-label">DATA SOURCE</span><strong>FDS Cleaned Survey</strong><span>Reference · 211 responses</span></div></div>
+        <section class="stats-grid" aria-label="Reference overview"><div class="stat-card"><div class="stat-caption">REFERENCE RESPONSES <span>01</span></div><div class="stat-value">211</div><div class="stat-footer">Clean_Data survey records</div></div><div class="stat-card"><div class="stat-caption">REFERENCE MEAN <span>02</span></div><div class="stat-value">1.428 <small>h/day</small></div><div class="stat-footer">Approximate band midpoint mean</div></div><div class="stat-card"><div class="stat-caption">SIGNIFICANCE LEVEL <span>03</span></div><div class="stat-value">5.0<small>%</small></div><div class="stat-footer">Two-sided tests · α = 0.05</div></div></section>
+        <section class="workspace-panel" id="input"><div class="panel-title"><div class="section-num">01</div><div><h2>Bring your new sample</h2><p>Choose how you want to enter the listening-time data.</p></div></div>
+          <div class="mode-tabs" role="tablist" aria-label="Sample entry method"><button type="button" id="tabCounts" class="mode-tab selected" role="tab" aria-selected="true">✎ Enter category counts</button><button type="button" id="tabUpload" class="mode-tab" role="tab" aria-selected="false">⇧ Upload a CSV file</button></div>
+          <div id="countsSection" role="tabpanel" aria-labelledby="tabCounts"><div class="helper-text">Enter the number of students for each category. All values must be non-negative whole numbers.</div><div class="count-fields"><label class="count-field">Less than 30 min<input type="number" id="count0" min="0" max="10000" step="1" value="0" /></label><label class="count-field">30–60 min<input type="number" id="count1" min="0" max="10000" step="1" value="0" /></label><label class="count-field">1–2 hours<input type="number" id="count2" min="0" max="10000" step="1" value="0" /></label><label class="count-field">2–3 hours<input type="number" id="count3" min="0" max="10000" step="1" value="0" /></label><label class="count-field">More than 3 hours<input type="number" id="count4" min="0" max="10000" step="1" value="0" /></label></div><div class="sample-total">New sample size <strong id="countsTotal">0 students</strong></div></div>
+          <div id="uploadSection" role="tabpanel" aria-labelledby="tabUpload" hidden><div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Choose CSV file"><div class="upload-symbol">⇧</div><strong>Drop your sample CSV here</strong><span>or click to browse files</span><small>Required column: <code>music_time</code> · up to 2 MB / 10,000 records</small></div><input type="file" id="csvFile" accept=".csv,text/csv" hidden /><div id="fileFeedback" class="file-feedback" role="status">No file selected.</div><a class="template-link" href="sample_new_students.csv" download>↓ Download example CSV</a></div>
+          <div id="message" class="message" role="alert" hidden></div>
+          <div class="action-row"><button type="button" class="primary-button" id="runBtn">Run statistical analysis <span>→</span></button><button type="button" class="text-button" id="demoBtn">Load example sample</button><button type="button" class="text-button" id="clearBtn">Reset</button></div>
+        </section>
+        <section id="results" class="results-area" aria-live="polite"><div class="empty-state"><div class="empty-icon">▥</div><h2>Your statistical report appears here</h2><p>Enter at least two new observations or upload a valid CSV, then run the analysis.</p></div></section>
+        <section id="methodology" class="methods-section"><div class="panel-title"><div class="section-num">02</div><div><h2>How the model works</h2><p>Transparent calculations, assumptions, and limitations.</p></div></div><div class="method-grid"><div class="method-item"><span class="method-index">A</span><strong>Welch's two-sample t-test</strong><p>Compares approximate mean listening hours across two independent groups. Uses Welch–Satterthwaite degrees of freedom and a two-sided p-value.</p></div><div class="method-item"><span class="method-index">B</span><strong>Category distribution test</strong><p>Compares the five listening-time frequencies using Pearson's chi-square statistic. When expected counts are small, calculates a fixed-margin Monte Carlo p-value.</p></div><div class="method-item"><span class="method-index">C</span><strong>Midpoint approximation</strong><p>Listening ranges are converted to 0.25, 0.75, 1.50, 2.50, and 3.50 hours. The “more than 3 hours” midpoint is an arbitrary proxy.</p></div><div class="method-item"><span class="method-index">D</span><strong>Interpret with care</strong><p>These are sample comparisons, not proof of a population effect. Small or concentrated new samples may violate normal approximations. The original workbook describes data as synthetic.</p></div></div></section>
+        <footer class="footer"><span>FDS Music Lab · Educational statistical prototype</span><span>CSV analysis happens in your browser; no sample data is uploaded to a server.</span></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
